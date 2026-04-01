@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState, type FormEvent } from 'react';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
@@ -11,7 +11,8 @@ import { RatingCard } from '@/components/RatingCard';
 import { EmptyState } from '@/components/EmptyState';
 import { RatingSummaryPanel } from '@/components/RatingSummaryPanel';
 import { getLatestViewRating, getSummaryForView, buildDraftRating, saveLocalRating } from '@/lib/rating-store';
-import { APP_ID, APP_NAME, CONTRACT_ADDRESS, ratingAbi } from '@/lib/wagmi';
+import { getAnalyticsSnapshot, recordTransaction, subscribeAnalytics } from '@/lib/analytics-store';
+import { APP_ID, APP_NAME, BUILDER_CODE, BUILDER_CODE_DATA_SUFFIX, CONTRACT_ADDRESS, ratingAbi } from '@/lib/wagmi';
 import { trackTransaction } from '@/utils/track';
 
 export default function RatePage() {
@@ -23,6 +24,7 @@ export default function RatePage() {
   const [latestTx, setLatestTx] = useState<string | null>(null);
   const [latestRating, setLatestRating] = useState(() => getLatestViewRating(address));
   const [summary, setSummary] = useState(() => getSummaryForView(address));
+  const [analytics, setAnalytics] = useState(() => getAnalyticsSnapshot('/rate'));
 
   const rated = useReadContract({ abi: ratingAbi, address: CONTRACT_ADDRESS, functionName: 'rated', args: [address as `0x${string}`], query: { enabled: Boolean(address) } });
   const count = useReadContract({ abi: ratingAbi, address: CONTRACT_ADDRESS, functionName: 'count' });
@@ -32,6 +34,8 @@ export default function RatePage() {
     setLatestRating(getLatestViewRating(address));
     setSummary(getSummaryForView(address));
   }, [address]);
+
+  useEffect(() => subscribeAnalytics(() => setAnalytics(getAnalyticsSnapshot('/rate'))), []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -50,12 +54,14 @@ export default function RatePage() {
         address: CONTRACT_ADDRESS,
         functionName: 'rate',
         args: [score],
+        dataSuffix: BUILDER_CODE_DATA_SUFFIX,
       });
 
       setLatestTx(hash);
       setStatusMessage('Waiting for confirmation...');
 
       await trackTransaction(APP_ID, APP_NAME, address, hash);
+      recordTransaction();
       const record = buildDraftRating(score, address, hash);
       saveLocalRating(record);
       setLatestRating(record);
@@ -97,7 +103,15 @@ export default function RatePage() {
         </form>
 
         <div className="section-grid">
-          <RatingSummaryPanel summary={summary} latestScore={latestRating?.score ?? null} isConnected={isConnected} />
+          <RatingSummaryPanel
+            summary={summary}
+            latestScore={latestRating?.score ?? null}
+            isConnected={isConnected}
+            views={analytics.views}
+            txCount={analytics.txCount}
+            builderCode={BUILDER_CODE}
+            builderSuffix={BUILDER_CODE_DATA_SUFFIX}
+          />
           <div className="panel">
             <div className="panel__inner">
               <div className="panel__title">
@@ -135,14 +149,26 @@ export default function RatePage() {
                   <div className="summary-tile__note">Ratings recorded so far.</div>
                 </div>
                 <div className="summary-tile">
-                  <div className="summary-tile__label">Status</div>
-                  <div className="summary-tile__value">{status}</div>
-                  <div className="summary-tile__note">Submission flow state.</div>
+                  <div className="summary-tile__label">Views</div>
+                  <div className="summary-tile__value">{analytics.routeViews}</div>
+                  <div className="summary-tile__note">Page visits for this route.</div>
                 </div>
                 <div className="summary-tile">
-                  <div className="summary-tile__label">Wallet</div>
-                  <div className="summary-tile__value">{isConnected ? 'Linked' : 'Idle'}</div>
-                  <div className="summary-tile__note">Connect to submit.</div>
+                  <div className="summary-tile__label">Tx volume</div>
+                  <div className="summary-tile__value">{analytics.txCount}</div>
+                  <div className="summary-tile__note">Tracked successful submissions.</div>
+                </div>
+              </div>
+              <div className="summary-grid" style={{ marginTop: 16 }}>
+                <div className="summary-tile">
+                  <div className="summary-tile__label">Builder code</div>
+                  <div className="summary-tile__value mono" style={{ fontSize: '1rem' }}>{BUILDER_CODE}</div>
+                  <div className="summary-tile__note">Attached through `dataSuffix`.</div>
+                </div>
+                <div className="summary-tile">
+                  <div className="summary-tile__label">Data suffix</div>
+                  <div className="summary-tile__value mono" style={{ fontSize: '1rem' }}>0x6263…8021</div>
+                  <div className="summary-tile__note">ERC-8021 attribution.</div>
                 </div>
               </div>
             </div>
@@ -152,5 +178,3 @@ export default function RatePage() {
     </main>
   );
 }
-
-

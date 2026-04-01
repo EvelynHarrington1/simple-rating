@@ -7,8 +7,8 @@ export const APP_ID = 'app-032';
 export const APP_NAME = 'simple-rating';
 export const CONTRACT_ADDRESS = '0xcf1f31529eef75efb083f7617f00c0f1681e2849' as const;
 
-// Replace this placeholder with the real builder code data suffix once it is provided.
-export const BUILDER_CODE_DATA_SUFFIX = 'TODO_REPLACE_WITH_BUILDER_CODE_SUFFIX';
+export const BUILDER_CODE = 'bc_xqvxho2a';
+export const BUILDER_CODE_DATA_SUFFIX = '0x62635f78717678686f32610b0080218021802180218021802180218021' as const;
 
 export const ratingAbi = parseAbi([
   'function rate(uint8 score)',
@@ -27,4 +27,3 @@ export const wagmiConfig = createConfig({
   ssr: true,
   multiInjectedProviderDiscovery: false,
 });
-

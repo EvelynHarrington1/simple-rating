@@ -1,8 +1,7 @@
-'use client';
+"use client";
 
-import { ReactNode, useEffect, useState } from 'react';
-import { base } from 'wagmi/chains';
-import { useAccount, usePublicClient, useReadContract, useWriteContract } from 'wagmi';
+import { useEffect, useState } from 'react';
+import { useAccount, useReadContract } from 'wagmi';
 import { ReviewHeader } from '@/components/ReviewHeader';
 import { WalletButton } from '@/components/WalletButton';
 import { RatingStatusChip } from '@/components/RatingStatusChip';
@@ -11,17 +10,13 @@ import { EmptyState } from '@/components/EmptyState';
 import { RatingSummaryPanel } from '@/components/RatingSummaryPanel';
 import { RatingCard } from '@/components/RatingCard';
 import { RatingHistoryList } from '@/components/RatingHistoryList';
-import { ScoreSelector } from '@/components/ScoreSelector';
-import { SubmitRatingButton } from '@/components/SubmitRatingButton';
-import { CopyRatingButton } from '@/components/CopyRatingButton';
-import { getLatestViewRating, getSummaryForView, getViewRatings, buildDraftRating, saveLocalRating, formatDateTime, formatShortAddress } from '@/lib/rating-store';
-import { APP_ID, APP_NAME, CONTRACT_ADDRESS, ratingAbi } from '@/lib/wagmi';
-import type { RatingRecord } from '@/lib/types';
-import { trackTransaction } from '@/utils/track';
+import { getLatestViewRating, getSummaryForView, getViewRatings, formatDateTime, formatShortAddress } from '@/lib/rating-store';
+import { getAnalyticsSnapshot, subscribeAnalytics } from '@/lib/analytics-store';
+import { APP_ID, BUILDER_CODE, BUILDER_CODE_DATA_SUFFIX, CONTRACT_ADDRESS, ratingAbi } from '@/lib/wagmi';
 
 function useConnectedView(address?: string) {
-  const [records, setRecords] = useState<RatingRecord[]>(() => getViewRatings(address));
-  const [latest, setLatest] = useState<RatingRecord | null>(() => getLatestViewRating(address));
+  const [records, setRecords] = useState(() => getViewRatings(address));
+  const [latest, setLatest] = useState(() => getLatestViewRating(address));
   const [summary, setSummary] = useState(() => getSummaryForView(address));
 
   useEffect(() => {
@@ -30,7 +25,7 @@ function useConnectedView(address?: string) {
     setSummary(getSummaryForView(address));
   }, [address]);
 
-  return { records, latest, summary, setRecords, setLatest, setSummary };
+  return { records, latest, summary };
 }
 
 export default function HomePage() {
@@ -38,6 +33,9 @@ export default function HomePage() {
   const { records, latest, summary } = useConnectedView(address);
   const chainAverage = useReadContract({ abi: ratingAbi, address: CONTRACT_ADDRESS, functionName: 'average' });
   const chainCount = useReadContract({ abi: ratingAbi, address: CONTRACT_ADDRESS, functionName: 'count' });
+  const [analytics, setAnalytics] = useState(() => getAnalyticsSnapshot('/'));
+
+  useEffect(() => subscribeAnalytics(() => setAnalytics(getAnalyticsSnapshot('/'))), []);
 
   return (
     <main className="app-shell page-stack">
@@ -82,7 +80,15 @@ export default function HomePage() {
           </div>
         </div>
 
-        <RatingSummaryPanel summary={summary} latestScore={latest?.score ?? null} isConnected={isConnected} />
+        <RatingSummaryPanel
+          summary={summary}
+          latestScore={latest?.score ?? null}
+          isConnected={isConnected}
+          views={analytics.views}
+          txCount={analytics.txCount}
+          builderCode={BUILDER_CODE}
+          builderSuffix={BUILDER_CODE_DATA_SUFFIX}
+        />
       </section>
 
       <section className="section-grid">
@@ -125,23 +131,23 @@ export default function HomePage() {
           <div className="summary-grid">
             <div className="summary-tile">
               <div className="summary-tile__label">Contract average</div>
-              <div className="summary-tile__value">{String(chainAverage.data ? Number(chainAverage.data) : summary.average)}</div>
+              <div className="summary-tile__value">{String(chainAverage.data !== undefined ? Number(chainAverage.data) : summary.average)}</div>
               <div className="summary-tile__note">Onchain read when available.</div>
             </div>
             <div className="summary-tile">
               <div className="summary-tile__label">Contract count</div>
-              <div className="summary-tile__value">{String(chainCount.data ? Number(chainCount.data) : summary.count)}</div>
+              <div className="summary-tile__value">{String(chainCount.data !== undefined ? Number(chainCount.data) : summary.count)}</div>
               <div className="summary-tile__note">Ratings recorded on Base.</div>
             </div>
             <div className="summary-tile">
-              <div className="summary-tile__label">Current score</div>
-              <div className="summary-tile__value">{latest?.score ?? '—'}</div>
-              <div className="summary-tile__note">Latest connected record.</div>
+              <div className="summary-tile__label">Attribution</div>
+              <div className="summary-tile__value">{APP_ID}</div>
+              <div className="summary-tile__note">App ID linked to this build.</div>
             </div>
             <div className="summary-tile">
-              <div className="summary-tile__label">Status</div>
-              <div className="summary-tile__value">{isConnected ? 'Live' : 'Idle'}</div>
-              <div className="summary-tile__note">{isConnected ? 'Wallet linked' : 'Waiting for a wallet'}</div>
+              <div className="summary-tile__label">Builder code</div>
+              <div className="summary-tile__value mono" style={{ fontSize: '1rem' }}>{BUILDER_CODE}</div>
+              <div className="summary-tile__note">Suffix attached on submit.</div>
             </div>
           </div>
         </div>
@@ -149,4 +155,3 @@ export default function HomePage() {
     </main>
   );
 }
-

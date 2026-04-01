@@ -91,4 +91,3 @@ export function buildDraftRating(score: number, owner: string, txHash?: string):
     source: 'local',
   };
 }
-
