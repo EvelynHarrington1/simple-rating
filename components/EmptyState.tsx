@@ -1,0 +1,14 @@
+'use client';
+
+import { ReactNode } from 'react';
+
+export function EmptyState({ title, description, action }: { title: string; description: string; action?: ReactNode }) {
+  return (
+    <div className="empty-state">
+      <strong>{title}</strong>
+      <div>{description}</div>
+      {action}
+    </div>
+  );
+}
+
