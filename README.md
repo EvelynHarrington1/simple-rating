@@ -60,3 +60,9 @@ Clone the repository:
 ```bash
 git clone https://github.com/EvelynHarrington1/simple-rating.git
 ```
+
+Move into the project directory:
+
+```bash
+cd simple-rating
+```
