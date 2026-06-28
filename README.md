@@ -26,3 +26,8 @@ GitHub: https://github.com/EvelynHarrington1/simple-rating.git
 - Submit ratings using a 1-to-10 scoring model.
 - Browse the main rating hub from the home page.
 - View individual rating detail pages.
+- Review a personal rating journal.
+- Open a lightweight summary page.
+- Read a minimal explanation of the project on the about page.
+- Includes Base-specific metadata in the application layout.
+- Includes a transaction attribution hook in the utilities folder.
