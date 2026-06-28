@@ -88,3 +88,9 @@ Use the home page as the main rating hub.
 Go to `/rate` to submit a score from 1 to 10.
 
 Open `/ratings/[id]` to view a specific rating detail page.
+
+Visit `/my` to review the personal rating journal.
+
+Use `/summary` for a lightweight overview.
+
+Visit `/about` for a short explanation of the project.
