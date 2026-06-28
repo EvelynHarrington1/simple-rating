@@ -31,3 +31,10 @@ GitHub: https://github.com/EvelynHarrington1/simple-rating.git
 - Read a minimal explanation of the project on the about page.
 - Includes Base-specific metadata in the application layout.
 - Includes a transaction attribution hook in the utilities folder.
+
+## Pages
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Rating hub |
+| `/rate` | Submit a rating |
