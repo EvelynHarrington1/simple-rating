@@ -100,3 +100,9 @@ Visit `/about` for a short explanation of the project.
 All visible UI text should remain in English.
 
 Keep the required Base app id meta tag in `app/layout.tsx`.
+
+Keep the builder code suffix placeholder in `lib/wagmi.ts`.
+
+Keep the transaction attribution hook in `utils/track.js`.
+
+When changing routes, make sure the page list above remains accurate.
