@@ -44,3 +44,7 @@ GitHub: https://github.com/EvelynHarrington1/simple-rating.git
 | `/about` | Minimal explanation |
 
 ## Project Structure Notes
+
+The application uses the Next.js App Router.
+
+Important files referenced by the project include:
