@@ -48,3 +48,9 @@ GitHub: https://github.com/EvelynHarrington1/simple-rating.git
 The application uses the Next.js App Router.
 
 Important files referenced by the project include:
+
+- `app/layout.tsx` for shared application layout metadata.
+- `lib/wagmi.ts` for Wagmi configuration and the builder code suffix placeholder.
+- `utils/track.js` for the transaction attribution hook.
+
+## Setup
