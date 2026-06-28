@@ -94,3 +94,9 @@ Visit `/my` to review the personal rating journal.
 Use `/summary` for a lightweight overview.
 
 Visit `/about` for a short explanation of the project.
+
+## Development Notes
+
+All visible UI text should remain in English.
+
+Keep the required Base app id meta tag in `app/layout.tsx`.
