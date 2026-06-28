@@ -66,3 +66,9 @@ Move into the project directory:
 ```bash
 cd simple-rating
 ```
+
+Install dependencies:
+
+```bash
+npm install
+```
