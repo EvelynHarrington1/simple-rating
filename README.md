@@ -9,3 +9,9 @@ A premium Base rating studio for submitting 1-to-10 scores.
 It provides a small set of pages for submitting ratings, viewing rating details, reviewing personal activity, and reading a lightweight summary.
 
 The interface is designed to be clear, direct, and entirely in English.
+
+## Repository
+
+GitHub: https://github.com/EvelynHarrington1/simple-rating.git
+
+## Stack
