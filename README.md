@@ -20,3 +20,9 @@ GitHub: https://github.com/EvelynHarrington1/simple-rating.git
 - TypeScript
 - Wagmi
 - Viem
+
+## Features
+
+- Submit ratings using a 1-to-10 scoring model.
+- Browse the main rating hub from the home page.
+- View individual rating detail pages.
