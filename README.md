@@ -54,3 +54,9 @@ Important files referenced by the project include:
 - `utils/track.js` for the transaction attribution hook.
 
 ## Setup
+
+Clone the repository:
+
+```bash
+git clone https://github.com/EvelynHarrington1/simple-rating.git
+```
