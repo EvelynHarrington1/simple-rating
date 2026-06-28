@@ -84,3 +84,7 @@ Open the local URL printed by the development server in your browser.
 ## Usage
 
 Use the home page as the main rating hub.
+
+Go to `/rate` to submit a score from 1 to 10.
+
+Open `/ratings/[id]` to view a specific rating detail page.
