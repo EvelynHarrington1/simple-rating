@@ -38,3 +38,9 @@ GitHub: https://github.com/EvelynHarrington1/simple-rating.git
 | --- | --- |
 | `/` | Rating hub |
 | `/rate` | Submit a rating |
+| `/ratings/[id]` | Rating detail |
+| `/my` | Personal rating journal |
+| `/summary` | Lightweight overview |
+| `/about` | Minimal explanation |
+
+## Project Structure Notes
