@@ -106,3 +106,9 @@ Keep the builder code suffix placeholder in `lib/wagmi.ts`.
 Keep the transaction attribution hook in `utils/track.js`.
 
 When changing routes, make sure the page list above remains accurate.
+
+When updating rating behavior, keep the 1-to-10 scoring model consistent across the interface.
+
+## License
+
+No license information is currently provided in the original project notes.
