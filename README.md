@@ -15,3 +15,8 @@ The interface is designed to be clear, direct, and entirely in English.
 GitHub: https://github.com/EvelynHarrington1/simple-rating.git
 
 ## Stack
+
+- Next.js App Router
+- TypeScript
+- Wagmi
+- Viem
